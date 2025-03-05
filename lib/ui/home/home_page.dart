@@ -47,6 +47,9 @@ class _HomePageState extends State<HomePage> {
         imageUrl:
             "https://www.stackscale.com/wp-content/uploads/2022/08/debian-gnu-linux-distro-stackscale.jpg"),
   ];
+
+  FocusNode searchFocusNode = FocusNode();
+  TextEditingController searchController = TextEditingController();
   @override
   void initState() {
     // TODO: implement initState
@@ -55,83 +58,97 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: 30),
-      child: Scaffold(
-          appBar: AppBar(
-            elevation: 0,
-            backgroundColor: Colors.white,
-            title: Text(
-              AppConstants.appName,
-              style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
-            ),
-            actions: [
-              Icon(Icons.qr_code, color: Colors.black),
-              SizedBox(
-                width: 15,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Padding(
+        padding: EdgeInsets.only(top: 30),
+        child: Scaffold(
+            appBar: AppBar(
+              elevation: 0,
+              backgroundColor: Colors.white,
+              title: Text(
+                AppConstants.appName,
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
               ),
-              Icon(
-                Icons.camera_alt,
-                color: Colors.black,
-              ),
-              SizedBox(
-                width: 7,
-              ),
-              Icon(Icons.more_vert, color: Colors.black),
-              SizedBox(
-                width: 7,
-              ),
-            ],
-          ),
-          body: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            child: Column(
-              children: [
+              actions: [
+                Icon(Icons.qr_code, color: Colors.black),
                 SizedBox(
-                  height: 7,
+                  width: 15,
                 ),
-                TextFormField(
-                  style: TextStyle(color: Colors.blue),
-                  decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(13),
-                      prefixIcon: Icon(Icons.search),
-                      hintText: "Ask meta AI or Search",
-                      hintStyle: TextStyle(color: Colors.grey),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30))),
+                Icon(
+                  Icons.camera_alt,
+                  color: Colors.black,
                 ),
-                Expanded(
-                  child: ListView.builder(
-                      itemCount: messages.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Message(
-                                          imageUrl: messages[index].imageUrl,
-                                          name: messages[index].name,
-                                          lastMessage:
-                                              messages[index].lastMessage,
-                                        )));
-                          },
-                          leading: CircleAvatar(
-                            backgroundImage:
-                                NetworkImage(messages[index].imageUrl),
-                          ),
-                          title: Text(messages[index].name),
-                          subtitle: Text(messages[index].lastMessage),
-                          trailing: Text(messages[index].time!),
-                        );
-                      }),
+                SizedBox(
+                  width: 7,
+                ),
+                Icon(Icons.more_vert, color: Colors.black),
+                SizedBox(
+                  width: 7,
                 ),
               ],
             ),
-          )),
+            body: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 7,
+                  ),
+                  TextFormField(
+                    controller: searchController,
+                    focusNode: searchFocusNode,
+                    style: TextStyle(color: Colors.blue),
+                    decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(13),
+                        prefixIcon: Icon(Icons.search),
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              searchController.clear();
+                              searchFocusNode.unfocus();
+                            },
+                            icon: Icon(Icons.clear)),
+                        hintText: "Ask meta AI or Search",
+                        hintStyle: TextStyle(color: Colors.grey),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30))),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                        itemCount: messages.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            onTap: () {
+                              searchFocusNode.unfocus();
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Message(
+                                            imageUrl: messages[index].imageUrl,
+                                            name: messages[index].name,
+                                            lastMessage:
+                                                messages[index].lastMessage,
+                                          )));
+                            },
+                            leading: CircleAvatar(
+                              backgroundImage:
+                                  NetworkImage(messages[index].imageUrl),
+                            ),
+                            title: Text(messages[index].name),
+                            subtitle: Text(messages[index].lastMessage),
+                            trailing: Text(messages[index].time!),
+                          );
+                        }),
+                  ),
+                ],
+              ),
+            )),
+      ),
     );
   }
 }
