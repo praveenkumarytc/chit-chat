@@ -113,7 +113,7 @@ class _HomePageState extends State<HomePage> {
                               searchFocusNode.unfocus();
                             },
                             icon: Icon(Icons.clear)),
-                        hintText: "Ask meta AI or Search",
+                        hintText: "Ask meta or search",
                         hintStyle: TextStyle(color: Colors.grey),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30))),
